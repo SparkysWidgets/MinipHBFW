@@ -4,6 +4,7 @@ Welcome To: MinipH Basic Example Firmware!!
 ##### Note: This is for the MinipH Hardware Version 1 Branch
 
 This is the base example sketch for using MinipH hardware. The usage is quite straight forward :sunglasses:
+
 MinipH digitizes the analog voltage from the pH AFE usin an I2C ADC.
 
 Adding pH Sensors has never been easier
