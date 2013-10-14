@@ -22,7 +22,9 @@
 //EEPROM trigger check
 #define Write_Check      0x1234
 
-#define ADDRESS 0x4D // MCP3221 A5 I2C address
+#define ADDRESS 0x4D // MCP3221 A5 in Dec 77 A0 = 72 A7 = 79)
+                     // A0 = x48, A1 = x49, A2 = x4A, A3 = x4B, 
+                     // A4 = x4C, A5 = x4D, A6 = x4E, A7 = x4F
 
 //Our parameter, for ease of use and eeprom access lets use a struct
 struct parameters_T
@@ -34,8 +36,10 @@ struct parameters_T
 params;
 
 float pH;
-float vRef = 4.096; //Our vRef into the ADC wont be exactly 5v 
-                  //best to measure and adjust here
+const float vRef = 4.096; //Our vRef into the ADC wont be exact
+                    //Since you can run VCC lower than Vref its
+                    //best to measure and adjust here
+const float opampGain = 5.25; //what is our Op-Amps gain (stage 1)
 
 void setup(){
   Wire.begin(); //conects I2C
@@ -134,7 +138,7 @@ void calibratepH4(int calnum)
 void calcpHSlope ()
 {
   //RefVoltage * our deltaRawpH / 12bit steps *mV in V / OP-Amp gain /pH step difference 7-4
-   params.pHStep = ((((vRef*(float)(params.pH7Cal - params.pH4Cal))/4096)*1000)/5.25)/3;
+   params.pHStep = ((((vRef*(float)(params.pH7Cal - params.pH4Cal))/4096)*1000)/opampGain)/3;
 }
 
 //Now that we know our probe "age" we can calucalate the proper pH Its really a matter of applying the math
@@ -143,7 +147,7 @@ void calcpHSlope ()
 void calcpH(int raw)
 {
  float miliVolts = (((float)raw/4096)*vRef)*1000;
- float temp = ((((vRef*(float)params.pH7Cal)/4096)*1000)- miliVolts)/5.25; //5.25 is the gain of our amp stage we need to remove it
+ float temp = ((((vRef*(float)params.pH7Cal)/4096)*1000)- miliVolts)/opampGain;
  pH = 7-(temp/params.pHStep);
 }
 
