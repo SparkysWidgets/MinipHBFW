@@ -1,4 +1,4 @@
-Welcome To: MinipH Basic Example Firmware!!
+welcome To: MinipH Basic Example Firmware!!
 ================================
 
 ##### Note: This is for the MinipH Hardware Version 1 Branch
