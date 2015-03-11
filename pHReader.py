@@ -31,7 +31,7 @@ class pHReader(object):
 
         :return : Integer between 0 and 4096 (2^12).
         """
-        return self.i2c.readU16(0x00)
+        return (self.i2c.readU8(0x00) * 256) + self.i2c.readU8(0x01)
 
 
     def calc_ph(self, reading):
