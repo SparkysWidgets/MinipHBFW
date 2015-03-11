@@ -87,7 +87,7 @@ class pHParams(object):
         This line will be used to calculate the pH step i.e. millivolts to
         pH value.
         """
-        x = [int(x) for x in self.calibs.keys()]
+        x = [float(x) for x in self.calibs.keys()]
         y = self.calibs.values()
         # slope, intercept, r_value, p_value, std_err = scipy.linregress(x, y)
         return scipy.linregress(x, y)[0], scipy.linregress(x, y)[1]
