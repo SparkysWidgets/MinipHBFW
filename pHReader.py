@@ -1,10 +1,15 @@
-#from Adafruit_I2C import Adafruit_I2C as I2C
+"""
+ Based on https://github.com/SparkysWidgets/MinipHBFW
+
+ A simple library to support http:#www.sparkyswidgets.com/Projects/MiniPh.aspx
+ on BeagleBone Black. Likely compatible with Raspbery Pi (minor changes might
+ be required). Requires SciPy and python-smbus.
+
+ Evan Galpin 2015
+"""
 import smbus as I2C
 import pHParams
 import time
-#define ADDRESS 0x4D # MCP3221 A5 in Dec 77 A0 = 72 A7 = 79)
-                     # A0 = x48, A1 = x49, A2 = x4A, A3 = x4B, 
-                     # A4 = x4C, A5 = x4D, A6 = x4E, A7 = x4F
 
 class pHReader(object):
     """Reads values from the pH probe + MinipH and converts to pH
@@ -48,12 +53,17 @@ class pHReader(object):
 
 
 def main():
-    """Test function
+    """Test function to ensure that your system is working properly and to
+    obtain calibration readings.
+
     """
     phr = pHReader()
     while True:
-        phr.read()
-        time.sleep(0.5)
+        sample = phr.read()
+        print sample
+        print phr.calc_ph(sample)
+        print
+        time.sleep(1)
 
 
 if __name__ == '__main__':

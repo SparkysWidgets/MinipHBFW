@@ -1,9 +1,14 @@
 """
- Based on https://github.com/SparkysWidgets/MinipHBFW
+ An object to represent the slope of a pH probe using MinipH. This class takes
+ care of importing calibrations, exporting calibrations, and calculating the
+ slope and intercept of a probe based on the calibrations.
 
- A simple library to support http:#www.sparkyswidgets.com/Projects/MiniPh.aspx
- on BeagleBone Black. Likely compatible with Raspbery Pi (minor changes might
- be required). Requires Adafruit's BBIO/I2C.
+ Calibrations are kept in ph.json by default, but other filenames can be
+ provided.  These values should be changed based on your system readings and
+ calibration solutions used.  It is recommended that you choose calibration
+ points based on the range of pH readings you expect. This library supports
+ any number of calibration points 2 or greater, just add them to your
+ calibration file as required.
 
  Evan Galpin 2015
 
