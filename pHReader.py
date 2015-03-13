@@ -1,4 +1,5 @@
-from Adafruit_I2C import Adafruit_I2C as I2C
+#from Adafruit_I2C import Adafruit_I2C as I2C
+import smbus as I2C
 import pHParams
 import time
 #define ADDRESS 0x4D # MCP3221 A5 in Dec 77 A0 = 72 A7 = 79)
@@ -22,7 +23,8 @@ class pHReader(object):
         :param busnum: Optional. The I2C bus number that the probe is on.
         Default Adafruit_I2C bus (I2C2) used if not specified.
         """
-        self.i2c = I2C(addr, busnum)
+        self.addr = addr
+        self.i2c = I2C.SMBus(1)
         self.params = pHParams.pHParams()
 
 
@@ -31,7 +33,8 @@ class pHReader(object):
 
         :return : Integer between 0 and 4096 (2^12).
         """
-        return (self.i2c.readU8(0x00) * 256) + self.i2c.readU8(0x01)
+        reading = self.i2c.read_i2c_block_data(self.addr, 0x00, 2)
+        return (reading[0] << 8) + reading[1]
 
 
     def calc_ph(self, reading):
@@ -40,7 +43,7 @@ class pHReader(object):
         :param reading: Raw 12-bit reading from MinipH
         :return : Integer. 0.0 <= return <= 14.0
         """
-        reading = reading - self.params.interceptcept
+        reading = reading - self.params.intercept
         return round(reading / self.params.slope, 2)
 
 
@@ -49,7 +52,7 @@ def main():
     """
     phr = pHReader()
     while True:
-        print phr.read()
+        phr.read()
         time.sleep(0.5)
 
 
