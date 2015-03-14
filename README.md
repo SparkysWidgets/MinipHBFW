@@ -46,8 +46,8 @@ Hardware: Schematics and Layouts
 Planned Additions
 -------------------------
 
--Add support for MiniLib Library to consolidate all interface firmware under a common library core
--Add support for additional languages (I.E examples like egalpin/pythonify fork of the firmware)
+- Add support for MiniLib Library to consolidate all interface firmware under a common library core
+- Add support for additional languages (I.E examples like egalpin/pythonify fork of the firmware)
 
 License Info
 -------------------------
