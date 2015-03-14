@@ -3,10 +3,10 @@
  The usage for this design is very simple, as it uses the MCP3221 I2C ADC. Although actual
  pH calculation is done offboard the analog section is very well laid out giving great results
  at varying input voltages (see vRef for adjusting this from say 5v to 3.3v).
- MinipH can operate from 2.7 to 5.5V to accomdate varying levels of system. Power VCC with 3.3v for a raspi!
+ MinipH can operate from 2.7 to 5.5V to accommodate varying levels of system. Power VCC with 3.3v for a raspi!
  
  ADC samples at ~28.8KSPS @12bit (4096 steps) and has 8 I2C address of from A0 to A7 (Default A5)
- simply assemble the 2 BYTE regiters from the standard I2C read for the raw reading.
+ simply assemble the 2 BYTE registers from the standard I2C read for the raw reading.
  conversion to pH shown in code.
  
  Note: MinipH has an optional Vref(4.096V) that can be bypassed as well!
@@ -17,7 +17,7 @@
  */
 //I2C Library
 #include <Wire.h>
-//We'll want to save calibration and configration information in EEPROM
+//We'll want to save calibration and configuration information in EEPROM
 #include <avr/eeprom.h>
 //EEPROM trigger check
 #define Write_Check      0x1234
@@ -42,7 +42,7 @@ const float vRef = 4.096; //Our vRef into the ADC wont be exact
 const float opampGain = 5.25; //what is our Op-Amps gain (stage 1)
 
 void setup(){
-  Wire.begin(); //conects I2C
+  Wire.begin(); //initialize I2C
   Serial.begin(9600);
   //Lets read our Info from the eeprom and setup our params,
   //if we loose power or reset we'll still remember our settings!
@@ -72,7 +72,7 @@ void loop(){
    //We have a our Raw pH reading fresh from the ADC now lets figure out what the pH is  
    calcpH(adc_result);
    
-   //Lets handle any commands here otherwise if we do prior to a fesh ADC reading
+   //Lets handle any commands here otherwise if we do prior to a fresh ADC reading
    //may end up calibrate to slightly older data (this really might not matter, handle as you will)
    if(Serial.available() ) 
    {
@@ -104,7 +104,7 @@ void loop(){
    Serial.print(pH);
    Serial.print(" | "); 
    Serial.println(adc_result);
-   //You can delay or milis here depending on what tasks(others) you may have 
+   //You can delay or millis here depending on what tasks(others) you may have 
    delay(1000);
 }
 
@@ -131,19 +131,19 @@ void calibratepH4(int calnum)
   eeprom_write_block(&params, (void *)0, sizeof(params));
 }
 
-//This is really the heart of the calibration proccess, we want to capture the
+//This is really the heart of the calibration process, we want to capture the
 //probes "age" and compare it to the Ideal Probe, the easiest way to capture two readings,
 //at known point(4 and 7 for example) and calculate the slope.
-//If your slope is drifting too much from Ideal(59.16) its time to clean or replace!
+//If your slope is drifting too much from ideal (59.16) its time to clean or replace!
 void calcpHSlope ()
 {
   //RefVoltage * our deltaRawpH / 12bit steps *mV in V / OP-Amp gain /pH step difference 7-4
    params.pHStep = ((((vRef*(float)(params.pH7Cal - params.pH4Cal))/4096)*1000)/opampGain)/3;
 }
 
-//Now that we know our probe "age" we can calucalate the proper pH Its really a matter of applying the math
-//We will find our milivolts based on ADV vref and reading, then we use the 7 calibration
-//to find out how many steps that is away from 7, then apply our calibrated slope to calcualte real pH
+//Now that we know our probe "age" we can calculate the proper pH Its really a matter of applying the math
+//We will find our millivolts based on ADV vref and reading, then we use the 7 calibration
+//to find out how many steps that is away from 7, then apply our calibrated slope to calculate real pH
 void calcpH(int raw)
 {
  float miliVolts = (((float)raw/4096)*vRef)*1000;
@@ -151,7 +151,7 @@ void calcpH(int raw)
  pH = 7-(temp/params.pHStep);
 }
 
-//This just simply applys defaults to the params incase the need to be reset or
+//This just simply applies defaults to the params in case the need to be reset or
 //they have never been set before (!magicnum)
 void reset_Params(void)
 {
